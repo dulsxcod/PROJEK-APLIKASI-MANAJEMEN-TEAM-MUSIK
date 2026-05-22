@@ -214,7 +214,7 @@ if (isset($_GET['id'])) {
     <aside class="d-flex flex-column justify-content-between py-4">
         <div>
             <div class="px-4 mb-4">
-                <h1 class="h3 fw-bold brand-title mb-0">ADMIN Team</h1>
+                <h1 class="h3 fw-bold brand-title mb-0">KIMOCHI Team</h1>
                 <small class="text-white border opacity-50 text-uppercase tracking-widest"
                     style="font-size: 10px;">Admin Studio Pro</small>
             </div>
@@ -252,6 +252,10 @@ if (isset($_GET['id'])) {
                 <a class="nav-link-custom" href="chat.php">
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
+                </a>
+                <a class="nav-link-custom" href="kas.php">
+                    <span class="material-symbols-outlined">money</span>
+                    <span class="small fw-medium">Data Kas</span>
                 </a>
             </nav>
         </div>

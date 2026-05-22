@@ -217,8 +217,9 @@ $row = mysqli_fetch_assoc($query);
     <aside class="d-flex flex-column justify-content-between py-4">
         <div>
             <div class="px-4 mb-4">
-                <h1 class="h3 fw-bold brand-title mb-0">ADMIN Team</h1>
-                <small class="text-white border opacity-50 text-uppercase tracking-widest" style="font-size: 10px;">Admin Studio Pro</small>
+                <h1 class="h3 fw-bold brand-title mb-0">KIMOCHI Team</h1>
+                <small class="text-white border opacity-50 text-uppercase tracking-widest"
+                    style="font-size: 10px;">Admin Studio Pro</small>
             </div>
 
             <a href="index.php" class="text-decoration-none">
@@ -236,7 +237,7 @@ $row = mysqli_fetch_assoc($query);
 
             <nav class="px-2 d-flex flex-column gap-1 custom-scrollbar overflow-y-auto" style="max-height: calc(100vh - 320px);">
                 <a class="nav-link-custom" href="index.php">
-                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                     <span class="small fw-medium">Dashboard</span>
                 </a>
                 <a class="nav-link-custom" href="anggota.php">
@@ -250,6 +251,10 @@ $row = mysqli_fetch_assoc($query);
                 <a class="nav-link-custom active" href="chat.php">
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
+                </a>
+                <a class="nav-link-custom" href="kas.php">
+                    <span class="material-symbols-outlined">money</span>
+                    <span class="small fw-medium">Data Kas</span>
                 </a>
             </nav>
         </div>
@@ -286,8 +291,8 @@ $row = mysqli_fetch_assoc($query);
                             <span class="material-symbols-outlined" style="color: var(--accent-color)">groups</span>
                         </div>
                         <div>
-                            <h5 class="mb-0 text-white fw-bold small">Room Chat Musisi</h5>
-                            <span class="text-opacity-50 text-white" style="font-size: 11px;">Tempat koordinasi internal band & team</span>
+                            <h5 class="mb-0 text-white fw-bold small">TEAM KIMOCHI</h5>
+                            <span class="text-opacity-50 text-white" style="font-size: 11px;">The real of music </span>
                         </div>
                     </div>
                 </div>

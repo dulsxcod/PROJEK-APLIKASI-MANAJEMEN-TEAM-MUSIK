@@ -366,7 +366,7 @@ $row = mysqli_fetch_assoc($query);
                     <span class="material-symbols-outlined">group</span>
                     <span class="small fw-medium">Data Anggota</span>
                 </a>
-                <a class="nav-link-custom active" href="job.php">
+                <a class="nav-link-custom" href="job.php">
                     <span class="material-symbols-outlined">event</span>
                     <span class="small fw-medium">Jadwal/Job</span>
                 </a>
@@ -374,7 +374,7 @@ $row = mysqli_fetch_assoc($query);
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
                 </a>
-                <a class="nav-link-custom" href="kas.php">
+                <a class="nav-link-custom active" href="kas.php">
                     <span class="material-symbols-outlined">money</span>
                     <span class="small fw-medium">Data Kas</span>
                 </a>
@@ -408,9 +408,15 @@ $row = mysqli_fetch_assoc($query);
                             <span class="material-symbols-outlined" style="font-size: 16px;">Dashboard</span> Dashboard
                         </a>
                     </li>
+                    <li class="breadcrumb-item">
+                        <a href="anggota.php"
+                            class="text-white text-decoration-none d-flex align-items-center gap-1 hover-purple">
+                            Data Kas
+                        </a>
+                    </li>
                     <li class="breadcrumb-item active fw-semibold" aria-current="page"
                         style="color: var(--accent-color);">
-                        Jadwal/Job
+                        Tambah Kas
                     </li>
                 </ol>
             </nav>
@@ -425,93 +431,77 @@ $row = mysqli_fetch_assoc($query);
             </div>
         </div>
     </header>
-
     <main class="px-4 pb-5">
-
         <section class="mt-4">
-            <div class="glass-panel overflow-hidden">
-                <div
-                    class="px-4 py-3 d-flex justify-content-between align-items-center border-bottom border-white border-opacity-10">
-                    <h3 class="h5 fw-bold mb-0">Data Job</h3>
-                    <a href="tambah_job.php"
-                        class="px-3 mb-4 d-flex align-items-center p-3 glass-panel btn border border-white border-opacity-10 w-20 p-3 text-start d-flex align-items-center gap-3 bg-white-hover rounded-4 transition-all"
-                        style="background: rgba(255,255,255,0.03);">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(237,177,255,0.15); color: var(--accent-color);">
-                            <span class="material-symbols-outlined">person_add</span>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="glass-panel p-4 p-md-5" style="border-radius: 16px;">
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="p-2.5 rounded-3" style="background: rgba(237,177,255,0.1);">
+                                <span class="material-symbols-outlined"
+                                    style="color: var(--accent-color)">person_add</span>
+                            </div>
+                            <div>
+                                <h2 class="h5 text-white mb-0 fw-bold">Tambah Kas</h2>
+                                <p class="text-muted-custom small mb-0">Silakan isi formulir di bawah ini dengan
+                                    lengkap.</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="mb-0 fw-semibold text-white small">Tambah Job</p>
-                            <span class="text-white text-xs" style="font-size:12px;">Daftar Job Team</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="table-responsive">
-                    <table class="table custom-table mb-0 align-middle">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-3" style="width: 80px;">No</th>
-                                <th class="px-4 py-3">Nama Tuan Rumah</th>
-                                <th class="px-4 py-3">Tanggal</th>
-                                <th class="px-4 py-3">Alamat</th>
-                                <th class="px-4 py-3">Nama Group</th>
-                                <th class="px-4 py-3">Seragam</th>
-                                <th class="px-4 py-3 text-end" style="width: 100px;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            // 1. Jalankan query untuk mengambil semua data dari tabel anggota
-                            $query_job = mysqli_query($conn, "SELECT * FROM job");
 
-                            // 2. Cek apakah ada data di dalam tabel
-                            if (mysqli_num_rows($query_job) > 0) {
-                                $no = 1;
-                                // 3. Lakukan perulangan untuk menampilkan setiap baris data
-                                while ($row_job = mysqli_fetch_assoc($query_job)) {
-                                    ?>
-                                    <tr>
-                                        <td class="px-4 py-3 small text-white"><?= $no++; ?></td>
-                                        <td class="px-4 py-3">
-                                            <span class="small text-white fw-medium"><?= $row_job['NamaTuanRumah']; ?></span>
-                                        </td>
-                                        <td class="px-4 py-3"><span class="small text-white"><?= $row_job['Tanggal']; ?></span>
-                                        </td>
-                                        <td class="px-4 py-3"><span class="small text-white"><?= $row_job['Alamat']; ?></span>
-                                        </td>
-                                        <td class="px-4 py-3"><span
-                                                class="small text-white"><?= $row_job['NamaGroup']; ?></span></td>
-                                        <td class="px-4 py-3"><span class="small text-white"><?= $row_job['Seragam']; ?></span>
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <a href="edit_job.php?id=<?= $row_job['JobID']; ?>"
-                                                    class="btn btn-sm d-inline-flex align-items-center justify-content-center border border-white border-opacity-10 rounded-3 p-2"
-                                                    title="Edit Data"
-                                                    style="background: rgba(255, 255, 255, 0.02); transition: all 0.2s;">
-                                                    <span class="material-symbols-outlined"
-                                                        style="font-size: 18px; color: var(--accent-color);">edit</span>
-                                                </a>
+                        <form action="proses_tambah_kas.php" method="POST">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Tanggal</label>
+                                    <input type="date" name="Tanggal"
+                                        class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small"
+                                        placeholder="Masukkan nama tuan rumah" required style="transition: all 0.2s;"
+                                        onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';"
+                                        onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
 
-                                                <a href="proses_hapus_job.php?id=<?= $row_job['JobID']; ?>"
-                                                    class="btn btn-sm d-inline-flex align-items-center justify-content-center border border-white border-opacity-10 rounded-3 p-2"
-                                                    title="Hapus Data"
-                                                    onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?');"
-                                                    style="background: rgba(255, 255, 255, 0.02); transition: all 0.2s;">
-                                                    <span class="material-symbols-outlined"
-                                                        style="font-size: 18px; color: #ff6b6b;">delete</span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                }
-                            } else {
-                                echo '<tr><td colspan="9" class="text-center py-4 text-muted small">Belum ada data anggota yang terdaftar.</td></tr>';
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Pemasukan</label>
+                                    <input type="number" name="Pemasukan"
+                                        class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small"
+                                        placeholder="Masukan Nominal Uang Masuk" required style="transition: all 0.2s;"
+                                        onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';"
+                                        onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Pengeluaran</label>
+                                    <input type="number" name="Pengeluaran"
+                                        class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small"
+                                        placeholder="Masukan Nominal Uang Keluar" required style="transition: all 0.2s;"
+                                        onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';"
+                                        onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Keterangan</label>
+                                    <input type="text" name="Keterangan"
+                                        class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small"
+                                        placeholder="Contoh: Membeli Piano" required style="transition: all 0.2s;"
+                                        onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';"
+                                        onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
+
+                                <div
+                                    class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-white border-opacity-10">
+                                    <a href="kas.php"
+                                        class="btn btn-sm d-inline-flex align-items-center gap-2 border border-white border-opacity-10 text-white p-2.5 px-4 rounded-3"
+                                        style="background: rgba(255,255,255,0.02);">
+                                        Batal
+                                    </a>
+                                    <button type="submit"
+                                        class="btn btn-sm d-inline-flex align-items-center gap-2 text-white p-2.5 px-4 rounded-3"
+                                        style="background: var(--primary-gradient);">
+                                        <span class="material-symbols-outlined text-sm">save</span> Simpan Kas
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>

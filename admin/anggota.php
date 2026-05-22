@@ -334,11 +334,10 @@ $row = mysqli_fetch_assoc($query);
     <aside class="d-flex flex-column justify-content-between py-4">
         <div>
             <div class="px-4 mb-4">
-                <h1 class="h3 fw-bold brand-title mb-0">ADMIN Team</h1>
+                <h1 class="h3 fw-bold brand-title mb-0">KIMOCHI Team</h1>
                 <small class="text-white border opacity-50 text-uppercase tracking-widest"
                     style="font-size: 10px;">Admin Studio Pro</small>
             </div>
-
             <a href="index.php" class="text-decoration-none">
                 <div class="px-3 mb-4">
                     <div class="d-flex align-items-center gap-3 p-3 glass-panel"
@@ -373,6 +372,10 @@ $row = mysqli_fetch_assoc($query);
                 <a class="nav-link-custom" href="chat.php">
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
+                </a>
+                <a class="nav-link-custom" href="kas.php">
+                    <span class="material-symbols-outlined">money</span>
+                    <span class="small fw-medium">Data Kas</span>
                 </a>
             </nav>
         </div>

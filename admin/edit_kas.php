@@ -10,23 +10,25 @@ $id_login = isset($_SESSION['UserID']) ? $_SESSION['UserID'] : 1;
 $query = mysqli_query($conn, "SELECT * FROM anggota WHERE UserID = $id_login");
 $row = mysqli_fetch_assoc($query);
 
+// Menangkap ID Anggota yang akan diedit dari URL (contoh: edit_anggota.php?id=1)
+if (isset($_GET['id'])) {
+    $id = mysqli_real_escape_string($conn, $_GET['id']);
+    
+    // Query 1: Mengambil data satu anggota spesifik berdasarkan UserID untuk diedit
+    $query_edit = mysqli_query($conn, "SELECT * FROM kas WHERE KasID = '$id'");
+    $data_kas = mysqli_fetch_assoc($query_edit);
 
-// Query 2: Menghitung total semua musisi di tabel anggota
-$query_total_anggota = mysqli_query($conn, "SELECT COUNT(*) AS total_anggota FROM anggota");
-$data_total_anggota = mysqli_fetch_assoc($query_total_anggota);
-$total_anggota = $data_total_anggota['total_anggota'];
+    if (!$data_kas) {
+        echo "<script>alert('Data kas tidak ditemukan!'); window.location='kas.php';</script>";
+        exit;
+    }
+} else {
+    // Jika tidak ada ID di URL, kembalikan ke halaman daftar anggota
+    header("Location: kas.php");
+    exit;
+}
 
-
-$query_total_job = mysqli_query($conn, "SELECT COUNT(*) AS total_job FROM job");
-$data_total_job = mysqli_fetch_assoc($query_total_job);
-$total_job = $data_total_job['total_job'];
-
-// Query untuk menghitung total saldo kas
-$query_saldo = mysqli_query($conn, "SELECT SUM(Pemasukan) - SUM(Pengeluaran) AS total_saldo FROM kas");
-$data_saldo = mysqli_fetch_assoc($query_saldo);
-$total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 0
 ?>
-
 
 <!DOCTYPE html>
 <html lang="id">
@@ -38,8 +40,7 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
     <style>
         :root {
@@ -81,32 +82,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
 
         .glass-panel:hover {
             transform: translateY(-4px);
-        }
-
-        .glow-primary-card {
-            background: linear-gradient(135deg, rgba(157, 80, 187, 0.1) 0%, transparent 100%);
-            border-color: rgba(237, 177, 255, 0.2);
-            box-shadow: 0 0 30px 0 rgba(237, 177, 255, 0.05);
-        }
-
-        /* TAMBAHAN: Efek Hover Kustom untuk Breadcrumbs */
-        .hover-purple:hover {
-            color: var(--accent-color) !important;
-            text-shadow: 0 0 8px rgba(237, 177, 255, 0.4);
-        }
-
-        /* Scrollbar Kustom */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(237, 177, 255, 0.2);
-            border-radius: 10px;
         }
 
         /* Navigasi Samping (Sidebar) */
@@ -174,21 +149,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
             z-index: 1040;
         }
 
-        .search-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            padding-left: 45px;
-            color: var(--text-primary);
-        }
-
-        .search-box:focus {
-            background: rgba(0, 0, 0, 0.6);
-            border-color: rgba(237, 177, 255, 0.5);
-            box-shadow: 0 0 10px rgba(237, 177, 255, 0.2);
-            color: var(--text-primary);
-        }
-
         /* Tombol & Lencana */
         .gradient-btn {
             background: var(--primary-gradient);
@@ -202,32 +162,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
             filter: brightness(1.1);
             box-shadow: 0 0 15px rgba(157, 80, 187, 0.4);
             color: white;
-        }
-
-        .outline-btn-rounded {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--accent-color);
-            border-radius: 50px;
-            padding: 6px 20px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .outline-btn-rounded:hover {
-            border-color: var(--accent-color);
-            background: rgba(237, 177, 255, 0.05);
-            color: var(--accent-color);
-        }
-
-        /* Tumpukan Avatar */
-        .avatar-stack img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--surface-color);
-            margin-right: -12px;
-            object-fit: cover;
         }
 
         /* Penyesuaian Responsif */
@@ -246,6 +180,30 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                 padding-right: 15px;
             }
         }
+
+        .hover-purple:hover {
+            color: var(--accent-color) !important;
+            text-shadow: 0 0 8px rgba(237, 177, 255, 0.4);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .search-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding-left: 45px;
+            color: var(--text-primary);
+        }
+
+        .search-box:focus {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(237, 177, 255, 0.5);
+            box-shadow: 0 0 10px rgba(237, 177, 255, 0.2);
+            color: var(--text-primary);
+        }
     </style>
 </head>
 
@@ -258,29 +216,24 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                 <small class="text-white border opacity-50 text-uppercase tracking-widest"
                     style="font-size: 10px;">Admin Studio Pro</small>
             </div>
-
             <a href="index.php" class="text-decoration-none">
-                <div class="px-3 mb-4">
-                    <div class="d-flex align-items-center gap-3 p-3 glass-panel"
-                        style="border-radius: 12px; transform: none;">
-                        <img alt="Avatar Admin" class="rounded-circle object-fit-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCckUUmf2pbR34bOL0Ux5qx8dLAbJRNb85WVUwjNuAqbtdliy2ZTmqHnjSWxaeNODa9ueOiXQLONOyE_rRaYGvWoNDHRCWG3ejw1H4xJR-u5SSGZRZ_MITX1_GEuklqIjII4VUXL8rtHwEm665H2dssSxO90a7LCLaxLCb3Wnsk_nYhm6p4o1nElSk6gXk7OgIBLlp1drhqMKPMniywgNh489CDbLNkz4yv1lRo5tG3iPtI6s0d5SgPkwPyGY5zmoUcV2NfkkAyLC0"
-                            style="width:40px; height:40px; border: 1px solid rgba(237,177,255,0.3);" />
-                        <div class="overflow-hidden">
-                            <p class="mb-0 fw-semibold text-white text-truncate small">
-                                <?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : 'Admin'; ?>
-                            </p>
-                            <span class="text-white text-uppercase tracking-wider" style="font-size: 9px;">Kepala
-                                Operasional</span>
-                        </div>
+            <div class="px-3 mb-4">
+                <div class="d-flex align-items-center gap-3 p-3 glass-panel"
+                    style="border-radius: 12px; transform: none;">
+                    <img alt="Avatar Admin" class="rounded-circle object-fit-cover"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCckUUmf2pbR34bOL0Ux5qx8dLAbJRNb85WVUwjNuAqbtdliy2ZTmqHnjSWxaeNODa9ueOiXQLONOyE_rRaYGvWoNDHRCWG3ejw1H4xJR-u5SSGZRZ_MITX1_GEuklqIjII4VUXL8rtHwEm665H2dssSxO90a7LCLaxLCb3Wnsk_nYhm6p4o1nElSk6gXk7OgIBLlp1drhqMKPMniywgNh489CDbLNkz4yv1lRo5tG3iPtI6s0d5SgPkwPyGY5zmoUcV2NfkkAyLC0"
+                        style="width:40px; height:40px; border: 1px solid rgba(237,177,255,0.3);" />
+                    <div class="overflow-hidden">
+                        <p class="mb-0 fw-semibold text-white text-truncate small"><?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : 'Admin'; ?></p>
+                        <span class="text-white text-uppercase tracking-wider" style="font-size: 9px;">Kepala Operasional</span>
                     </div>
                 </div>
+            </div>
             </a>
 
-            <nav class="px-2 d-flex flex-column gap-1 custom-scrollbar overflow-y-auto"
-                style="max-height: calc(100vh - 320px);">
-                <a class="nav-link-custom active" href="index.php">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+            <nav class="px-2 d-flex flex-column gap-1">
+                <a class="nav-link-custom" href="index.php">
+                    <span class="material-symbols-outlined">dashboard</span>
                     <span class="small fw-medium">Dashboard</span>
                 </a>
                 <a class="nav-link-custom" href="anggota.php">
@@ -295,7 +248,7 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
                 </a>
-                <a class="nav-link-custom" href="kas.php">
+                <a class="nav-link-custom active" href="kas.php">
                     <span class="material-symbols-outlined">money</span>
                     <span class="small fw-medium">Data Kas</span>
                 </a>
@@ -321,11 +274,20 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
 
     <header class="d-flex align-items-center justify-content-between px-4">
         <div class="d-flex align-items-center gap-2">
-            <nav aria-label="breadcrumb">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                 <ol class="breadcrumb m-0 align-items-center" style="font-size: 13px; letter-spacing: 0.05em;">
-                    <li class="breadcrumb-item active fw-semibold d-flex align-items-center gap-1" aria-current="page"
-                        style="color: var(--accent-color); text-shadow: 0 0 8px rgba(237, 177, 255, 0.3);">
-                        <span class="material-symbols-outlined" style="font-size: 16px;">dashboard</span> Dashboard
+                    <li class="breadcrumb-item">
+                        <a href="index.php" class="text-white text-decoration-none d-flex align-items-center gap-1 hover-purple">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">dashboard</span> Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="anggota.php" class="text-white text-decoration-none d-flex align-items-center gap-1 hover-purple">
+                            Data Kas
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active fw-semibold" aria-current="page" style="color: var(--accent-color);">
+                        Edit Kas
                     </li>
                 </ol>
             </nav>
@@ -342,67 +304,55 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
     </header>
 
     <main class="px-4 pb-5">
-        <section class="row g-4 mt-1">
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(214,186,255,0.15); color: var(--secondary-color);">
-                            <span class="material-symbols-outlined">group</span>
+        <section class="mt-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="glass-panel p-4 p-md-5" style="border-radius: 16px;">
+                        
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="p-2.5 rounded-3" style="background: rgba(237,177,255,0.1);">
+                                <span class="material-symbols-outlined" style="color: var(--accent-color)">person_add_alt_1</span>
+                            </div>
+                            <div>
+                                <h2 class="h5 text-white mb-0 fw-bold">Edit Kas</h2>
+                                <p class="text-white small mb-0">Perbarui Kas</p>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Total
-                            Anggota</p>
-                        <h3 class="h2 fw-bold mb-0"><?= $total_anggota; ?> Anggota</h3>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(214,186,255,0.15); color: var(--secondary-color);">
-                            <span class="material-symbols-outlined">event</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Total Job
-                        </p>
-                        <h3 class="h2 fw-bold mb-0"><?= $total_job; ?> Job</h3>
-                    </div>
-                </div>
-            </div>
+                        <form action="proses_edit_kas.php" method="POST">
+                            <input type="hidden" name="KasID" value="<?= $data_kas['KasID']; ?>">
 
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(208,203,89,0.15); color: var(--tertiary-color);">
-                            <span class="material-symbols-outlined">event_available</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Agenda
-                            Studio</p>
-                        <h3 class="h2 fw-bold mb-0">8 Event</h3>
-                    </div>
-                </div>
-            </div>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Tanggal</label>
+                                    <input type="date" name="Tanggal" value="<?= $data_kas['Tanggal']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Masukkan Nama tuan rumah" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(237,177,255,0.15); color: var(--accent-color);">
-                            <span class="material-symbols-outlined">payments</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Estimasi
-                            Kas</p>
-                        <h3 class="h2 fw-bold mb-0" style="color: var(--accent-color);"><?= "Rp " . number_format($total_saldo, 0, ',', '.'); ?></h3>
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Pemasukan</label>
+                                    <input type="number" name="Tanggal" value="<?= $data_kas['Pemasukan'] ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Pengeluaran</label>
+                                    <input type="number" name="Pengeluaran" value="<?= $data_kas['Pengeluaran']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Masukkan nama lengkap" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label text-white-50 small fw-medium">Keterangan</label>
+                                    <input type="text" name="Keterangan" value="<?= $data_kas['Keterangan']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Contoh: Sukabumi" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                </div>
+
+                                <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-white border-opacity-10">
+                                    <a href="kas.php" class="btn btn-sm d-inline-flex align-items-center gap-2 border border-white border-opacity-10 text-white p-2.5 px-4 rounded-3" style="background: rgba(255,255,255,0.02);">
+                                        Batal
+                                    </a>
+                                    <button type="submit" name="update" class="btn btn-sm d-inline-flex align-items-center gap-2 text-white p-2.5 px-4 rounded-3" style="background: var(--primary-gradient);">
+                                        <span class="material-symbols-outlined text-sm">save</span> Simpan Perubahan
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

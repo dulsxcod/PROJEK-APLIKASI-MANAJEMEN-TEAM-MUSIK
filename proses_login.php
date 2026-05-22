@@ -1,8 +1,8 @@
 <?php
+// Pastikan session_start() diletakkan di paling atas sebelum output apapun
+session_start();
 include 'config/koneksi.php';
 global $conn;
-
-session_start();
 
 // Proteksi: Mencegah akses langsung tanpa submit form
 if (!isset($_POST['Username']) || !isset($_POST['Password'])) {
@@ -23,11 +23,7 @@ if ($cek > 0) {
     $data_user = mysqli_fetch_assoc($query);
 
     $_SESSION['status'] = "login";
-    
-    // === TAMBAHKAN BARIS INI ===
     $_SESSION['UserID'] = $data_user['UserID']; 
-    // ===========================
-
     $_SESSION['Username'] = $Username;
     $_SESSION['Role'] = $data_user['Role'];
     $_SESSION['NamaLengkap'] = $data_user['NamaLengkap']; 
@@ -40,5 +36,11 @@ if ($cek > 0) {
         header("location:home_anggota.php");
         exit();
     }
+} else {
+    // === TAMBAHAN PERBAIKAN: JIKA LOGIN GAGAL ===
+    // Set session pesan error agar ditangkap oleh file index.php
+    $_SESSION['error_message'] = "Username, Password, atau Role yang Anda masukkan salah.";
+    header("location:index.php");
+    exit();
 }
 ?>
