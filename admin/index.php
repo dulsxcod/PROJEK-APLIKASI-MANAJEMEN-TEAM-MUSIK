@@ -49,7 +49,7 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
             --surface-variant: #39333a;
             --primary-gradient: linear-gradient(135deg, #9d50bb 0%, #6e208c 100%);
             --accent-color: #edb1ff;
-            --text-primary: #e3dfeb;
+            --text-primary: #ebdfe9;
             --text-muted: #d1c2d2;
             --secondary-color: #d6baff;
             --tertiary-color: #d0cb59;
