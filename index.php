@@ -211,10 +211,10 @@ session_start();
             
             <div class="text-center mb-4">
                 <h1 class="fw-bold tracking-tight mb-1" style="background: linear-gradient(to right, var(--accent-color), #d6baff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem;">
-                    BeatManager
+                    KIMOCHI Team
                 </h1>
                 <p class="text-muted-custom text-uppercase small fw-medium tracking-widest" style="letter-spacing: 0.15em; font-size: 0.75rem;">
-                    Pro Studio Admin Portal
+                    The real of music
                 </p>
             </div>
 

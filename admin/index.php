@@ -25,9 +25,11 @@ $total_job = $data_total_job['total_job'];
 $query_saldo = mysqli_query($conn, "SELECT SUM(Pemasukan) - SUM(Pengeluaran) AS total_saldo FROM kas");
 $data_saldo = mysqli_fetch_assoc($query_saldo);
 $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 0
+
+$query_total_post = mysqli_query($conn, "SELECT COUNT(*) AS total_post FROM postingan");
+$data_total_post = mysqli_fetch_assoc($query_total_post);
+$total_post = $data_total_post['total_post'];
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="id">
@@ -231,7 +233,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
 
 <body>
 
-    <!-- SIDEBAR -->
     <aside class="d-flex flex-column justify-content-between py-4">
         <div>
             <div class="px-4 mb-4">
@@ -284,7 +285,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
         </div>
     </aside>
 
-    <!-- HEADER -->
     <header class="d-flex align-items-center justify-content-between px-4">
         <div class="d-flex align-items-center gap-2">
             <nav aria-label="breadcrumb">
@@ -304,10 +304,8 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="px-4 pb-5">
         
-        <!-- SECTION 1: STATISTIK (Seperti Sebelumnya) -->
         <section class="row g-4 mt-1">
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="glass-panel p-4">
@@ -343,8 +341,8 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                         </div>
                     </div>
                     <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Agenda Studio</p>
-                        <h3 class="h2 fw-bold mb-0">8 Event</h3>
+                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Total Postingan</p>
+                        <h3 class="h2 fw-bold mb-0"><?= $total_post; ?> Postingan</h3>
                     </div>
                 </div>
             </div>
@@ -363,18 +361,16 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
             </div>
         </section>
 
-        <!-- SECTION 2: INTERAKTIF (Feed Facebook & Quick Add Data) -->
         <section class="row g-4 mt-2">
             
-            <!-- KOLOM KIRI: Postingan ala Facebook -->
             <div class="col-12 col-lg-7 col-xl-8">
                 
-                <!-- Kotak Buat Postingan -->
                 <div class="glass-panel p-4 mb-4">
                     <form action="proses_post.php" method="POST">
                         <div class="d-flex gap-3 mb-3">
                             <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCckUUmf2pbR34bOL0Ux5qx8dLAbJRNb85WVUwjNuAqbtdliy2ZTmqHnjSWxaeNODa9ueOiXQLONOyE_rRaYGvWoNDHRCWG3ejw1H4xJR-u5SSGZRZ_MITX1_GEuklqIjII4VUXL8rtHwEm665H2dssSxO90a7LCLaxLCb3Wnsk_nYhm6p4o1nElSk6gXk7OgIBLlp1drhqMKPMniywgNh489CDbLNkz4yv1lRo5tG3iPtI6s0d5SgPkwPyGY5zmoUcV2NfkkAyLC0" 
                                  class="rounded-circle object-fit-cover" width="45" height="45" alt="Avatar">
+                                 
                             <textarea name="isi_postingan" class="form-control form-control-dark" rows="3" 
                                       placeholder="Ada pengumuman atau info update apa hari ini, <?= isset($row['NamaLengkap']) ? explode(' ', $row['NamaLengkap'])[0] : 'Admin'; ?>?" required></textarea>
                         </div>
@@ -392,46 +388,89 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                     </form>
                 </div>
 
-                <!-- Feed Timeline (Contoh Postingan) -->
                 <h6 class="text-white fw-bold mb-3 ms-1">Aktivitas Terkini</h6>
                 
+                <?php
+                // Ambil data postingan dari database (Urutkan dari yang terbaru)
+                $query_post = mysqli_query($conn, "SELECT p.*, a.NamaLengkap, a.Bagian FROM postingan p LEFT JOIN anggota a ON p.user_id = a.UserID ORDER BY p.tanggal_post DESC");
+                
+                while($post = mysqli_fetch_assoc($query_post)) {
+                    $id_post = $post['id_post'];
+                    $nama_pengirim = $post['NamaLengkap'] ? $post['NamaLengkap'] : 'Pengguna Terhapus';
+                    $bagian = $post['Bagian'] ? $post['Bagian'] : 'Divisi Tidak Diketahui';
+
+                    // Hitung jumlah Like
+                    $q_like = mysqli_query($conn, "SELECT COUNT(*) as jml_like FROM likes_post WHERE id_post = $id_post");
+                    $jml_like = mysqli_fetch_assoc($q_like)['jml_like'];
+
+                    // Cek warna tombol Like (jika user ini sudah like, beri warna ungu/accent)
+                    $q_cek_like = mysqli_query($conn, "SELECT * FROM likes_post WHERE id_post = $id_post AND user_id = $id_login");
+                    $sudah_like = mysqli_num_rows($q_cek_like) > 0;
+                    $warna_jempol = $sudah_like ? 'color: var(--accent-color);' : 'color: white;';
+
+                    // Hitung jumlah Komentar
+                    $q_komen = mysqli_query($conn, "SELECT COUNT(*) as jml_komen FROM komentar_post WHERE id_post = $id_post");
+                    $jml_komen = mysqli_fetch_assoc($q_komen)['jml_komen'];
+                ?>
                 <div class="glass-panel p-4 mb-3">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div class="d-flex gap-3 align-items-center">
                             <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCckUUmf2pbR34bOL0Ux5qx8dLAbJRNb85WVUwjNuAqbtdliy2ZTmqHnjSWxaeNODa9ueOiXQLONOyE_rRaYGvWoNDHRCWG3ejw1H4xJR-u5SSGZRZ_MITX1_GEuklqIjII4VUXL8rtHwEm665H2dssSxO90a7LCLaxLCb3Wnsk_nYhm6p4o1nElSk6gXk7OgIBLlp1drhqMKPMniywgNh489CDbLNkz4yv1lRo5tG3iPtI6s0d5SgPkwPyGY5zmoUcV2NfkkAyLC0" 
                                  class="rounded-circle" width="40" height="40" alt="Avatar">
                             <div>
-                                <h6 class="mb-0 fw-bold text-white"><?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : 'Admin'; ?></h6>
-                                <small class="text-white" style="font-size: 11px;">Baru saja • Divisi Operasional</small>
+                                <h6 class="mb-0 fw-bold text-white"><?= $nama_pengirim; ?></h6>
+                                <small class="text-white" style="font-size: 11px;">
+                                    <?= date('d M Y - H:i', strtotime($post['tanggal_post'])); ?> • <?= $bagian; ?>
+                                </small>
                             </div>
                         </div>
-                        <button class="btn btn-sm text-white border-0"><span class="material-symbols-outlined">more_horiz</span></button>
                     </div>
                     
                     <p class="text-white-50 mb-3" style="font-size: 14px; line-height: 1.6;">
-                        Halo tim! Jangan lupa besok kita ada loading alat jam 14.00 WIB untuk acara Wedding di Gedung Serbaguna. Pastikan kabel dan jack aman semua ya. Kas bulan ini juga tolong diselesaikan bagi yang belum. Semangat! 🎸🔥
+                        <?= nl2br(htmlspecialchars($post['isi_postingan'])); ?>
                     </p>
 
                     <div class="d-flex gap-3 pt-3 border-top border-secondary border-opacity-25">
-                        <button class="btn btn-sm btn-link text-decoration-none text-white d-flex align-items-center gap-2 p-0 hover-purple">
-                            <span class="material-symbols-outlined" style="font-size: 18px;">thumb_up</span> Suka (4)
-                        </button>
-                        <button class="btn btn-sm btn-link text-decoration-none text-white d-flex align-items-center gap-2 p-0 hover-purple">
-                            <span class="material-symbols-outlined" style="font-size: 18px;">chat_bubble</span> Komentar (1)
+                        <a href="proses_like.php?id=<?= $id_post; ?>" class="btn btn-sm btn-link text-decoration-none d-flex align-items-center gap-2 p-0 hover-purple like-btn" data-id="<?= $id_post; ?>" style="<?= $warna_jempol; ?>">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">thumb_up</span> Suka (<span class="like-count"><?= $jml_like; ?></span>)
+                        </a>
+                        <button onclick="document.getElementById('komen-area-<?= $id_post; ?>').classList.toggle('d-none')" class="btn btn-sm btn-link text-decoration-none text-white d-flex align-items-center gap-2 p-0 hover-purple">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">chat_bubble</span> Komentar (<span class="comment-count-<?= $id_post; ?>"><?= $jml_komen; ?></span>)
                         </button>
                     </div>
+
+                    <div id="komen-area-<?= $id_post; ?>" class="d-none mt-3 pt-3 border-top border-secondary border-opacity-25">
+                        
+                        <div id="komen-list-<?= $id_post; ?>" style="max-height: 200px; overflow-y: auto;" class="custom-scrollbar mb-2 pe-2">
+                            <?php
+                            $query_k = mysqli_query($conn, "SELECT k.*, a.NamaLengkap FROM komentar_post k LEFT JOIN anggota a ON k.user_id = a.UserID WHERE k.id_post = $id_post ORDER BY k.tanggal_komentar ASC");
+                            while($komen = mysqli_fetch_assoc($query_k)) {
+                                $nama_komen = $komen['NamaLengkap'] ? $komen['NamaLengkap'] : 'Anonim';
+                            ?>
+                                <div class="mb-2 p-2 rounded" style="background: rgba(0, 0, 0, 0.2);">
+                                    <strong class="text-white" style="font-size: 12px;"><?= $nama_komen; ?></strong><br>
+                                    <span class="text-white-50" style="font-size: 13px;"><?= htmlspecialchars($komen['isi_komentar']); ?></span>
+                                </div>
+                            <?php } ?>
+                        </div>
+
+                        <form action="proses_komentar.php" method="POST" class="d-flex gap-2 comment-form" data-id="<?= $id_post; ?>">
+                            <input type="hidden" name="id_post" value="<?= $id_post; ?>">
+                            <input type="text" name="isi_komentar" class="form-control form-control-sm form-control-dark rounded-pill" placeholder="Tulis balasan..." required>
+                            <button type="submit" name="submit_komentar" class="btn btn-sm gradient-btn rounded-pill px-3">Kirim</button>
+                        </form>
+                    </div>
                 </div>
+                <?php } ?>
 
             </div>
 
-            <!-- KOLOM KANAN: Quick Input (Data Job, Kas, Anggota) -->
             <div class="col-12 col-lg-5 col-xl-4">
                 <div class="glass-panel p-4">
                     <h6 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
                         <span class="material-symbols-outlined text-warning">bolt</span> Input Cepat
                     </h6>
                     
-                    <!-- Tabs Menu -->
                     <ul class="nav nav-pills nav-pills-custom mb-4 gap-2" id="quickAddTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="job-tab" data-bs-toggle="pill" data-bs-target="#job" type="button" role="tab">Job Baru</button>
@@ -444,10 +483,8 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                         </li>
                     </ul>
 
-                    <!-- Tabs Content -->
                     <div class="tab-content" id="quickAddTabContent">
                         
-                        <!-- Form Data Job -->
                         <div class="tab-pane fade show active" id="job" role="tabpanel">
                             <form action="proses_tambah_job.php" method="POST">
                             <div class="row g-3">
@@ -513,7 +550,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                         </form>
                         </div>
 
-                        <!-- Form Data Kas -->
                         <div class="tab-pane fade" id="kas" role="tabpanel">
                             <form action="proses_tambah_kas.php" method="POST">
                             <div class="row g-3">
@@ -570,7 +606,6 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
                         </form>
                         </div>
 
-                        <!-- Form Data Anggota -->
                         <div class="tab-pane fade" id="anggota" role="tabpanel">
                             <form action="proses_tambah_anggota.php" method="POST">
                             <div class="row g-3">
@@ -697,6 +732,96 @@ $total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 
             overlay.style.setProperty('--x', e.clientX + 'px');
             overlay.style.setProperty('--y', e.clientY + 'px');
         });
+
+        // ==========================================
+        //  KODE JAVASCRIPT AJAX (ANTI-REFRESH)
+        // ==========================================
+
+        // 1. Handling Asynchronous Like Button
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); // Mencegah link berpindah halaman
+                
+                const postId = this.getAttribute('data-id');
+                const likeCountSpan = this.querySelector('.like-count');
+                let currentCount = parseInt(likeCountSpan.textContent);
+
+                // Optimistic UI: Ubah warna & angka secara langsung di web tanpa menunggu server
+                if (this.style.color === 'var(--accent-color)') {
+                    this.style.color = 'white';
+                    likeCountSpan.textContent = currentCount - 1;
+                } else {
+                    this.style.color = 'var(--accent-color)';
+                    likeCountSpan.textContent = currentCount + 1;
+                }
+
+                // Kirim request ke proses_like.php di background menggunakan Fetch API
+                fetch(`proses_like.php?id=${postId}`)
+                    .catch(err => console.error('Gagal memproses like:', err));
+            });
+        });
+
+        // 2. Handling Asynchronous Comment Form Submission
+        document.querySelectorAll('.comment-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Mencegah form melakukan reload halaman
+
+                const postId = this.getAttribute('data-id');
+                const inputField = this.querySelector('input[name="isi_komentar"]');
+                const komentarText = inputField.value.trim();
+
+                if (!komentarText) return;
+
+                // Siapkan data form untuk dikirim lewat AJAX
+                const formData = new FormData(this);
+                formData.append('submit_komentar', '1'); // Memastikan isset($_POST['submit_komentar']) di PHP aktif
+
+                // Kirim data komentar ke proses_komentar.php di background
+                fetch('proses_komentar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(() => {
+                    // Masukkan komponen komentar baru secara dinamis ke container list komentar
+                    const komenListContainer = document.getElementById(`komen-list-${postId}`);
+                    const newCommentDiv = document.createElement('div');
+                    newCommentDiv.className = 'mb-2 p-2 rounded';
+                    newCommentDiv.style.background = 'rgba(0, 0, 0, 0.2)';
+                    
+                    // Mengambil nama user dari PHP session yang aktif saat ini
+                    const namaUser = '<?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : "Anda"; ?>';
+
+                    newCommentDiv.innerHTML = `
+                        <strong class="text-white" style="font-size: 12px;">${namaUser}</strong><br>
+                        <span class="text-white-50" style="font-size: 13px;">${escapeHtml(komentarText)}</span>
+                    `;
+
+                    // Tambahkan ke baris paling bawah list komentar
+                    komenListContainer.appendChild(newCommentDiv);
+                    komenListContainer.scrollTop = komenListContainer.scrollHeight; // Auto gulir ke bawah
+
+                    // Reset field input text agar kosong kembali
+                    inputField.value = '';
+
+                    // Perbarui counter (jumlah angka komentar) pada tombol komentar di atasnya
+                    const commentCountSpan = document.querySelector(`.comment-count-${postId}`);
+                    if (commentCountSpan) {
+                        commentCountSpan.textContent = parseInt(commentCountSpan.textContent) + 1;
+                    }
+                })
+                .catch(err => console.error('Gagal mengirim komentar:', err));
+            });
+        });
+
+        // Fungsi pembantu untuk mencegah celah XSS Injection pada JavaScript client-side
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
     </script>
 </body>
 </html>
