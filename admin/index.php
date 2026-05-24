@@ -323,16 +323,6 @@ $total_post = $data_total_post['total_post'];
             <a href="../index.php" class="btn gradient-btn w-100 py-2.5 mb-3 rounded-3 shadow-sm text-sm">
                 Logout
             </a>
-            <div class="pt-3 border-top border-white border-opacity-10 d-flex flex-column gap-1">
-                <a class="nav-link-custom py-1 text-sm" href="#">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">settings</span>
-                    <span style="font-size: 13px;">Pengaturan</span>
-                </a>
-                <a class="nav-link-custom py-1 text-sm" href="#">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">help</span>
-                    <span style="font-size: 13px;">Bantuan</span>
-                </a>
-            </div>
         </div>
     </aside>
 
@@ -736,19 +726,19 @@ $total_post = $data_total_post['total_post'];
                                 <div class="row g-3">
                                     <div class="col-12 col-md-6">
                                         <label class="form-label text-white-50 small fw-medium">Username</label>
-                                        <input type="text" name="Username" class="form-control form-control-dark rounded-3 p-2.5 small" required>
+                                        <input type="text" name="Username" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: nama123" required>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label class="form-label text-white-50 small fw-medium">Password</label>
-                                        <input type="password" name="Password" class="form-control form-control-dark rounded-3 p-2.5 small" required>
+                                        <input type="password" name="Password" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Password" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label text-white-50 small fw-medium">Nama Lengkap</label>
-                                        <input type="text" name="NamaLengkap" class="form-control form-control-dark rounded-3 p-2.5 small" required>
+                                        <input type="text" name="NamaLengkap" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Masukkan Nama Lengkap" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label text-white-50 small fw-medium">Tempat Lahir</label>
-                                        <input type="text" name="TempatLahir" class="form-control form-control-dark rounded-3 p-2.5 small" required>
+                                        <input type="text" name="TempatLahir" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: Indramayu" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label text-white-50 small fw-medium">Tanggal Lahir</label>
@@ -763,7 +753,7 @@ $total_post = $data_total_post['total_post'];
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label text-white-50 small fw-medium">Nomor HP</label>
-                                        <input type="number" name="NoHP" class="form-control form-control-dark rounded-3 p-2.5 small" required>
+                                        <input type="number" name="NoHP" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: 0123456789" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label text-white-50 small fw-medium">Role</label>

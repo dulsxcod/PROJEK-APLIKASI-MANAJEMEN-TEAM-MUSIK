@@ -390,16 +390,6 @@ $row = mysqli_fetch_assoc($query);
             <a href="../index.php" class="btn gradient-btn w-100 py-2.5 mb-3 rounded-3 shadow-sm text-sm">
                 Logout
             </a>
-            <div class="pt-3 border-top border-white border-opacity-10 d-flex flex-column gap-1">
-                <a class="nav-link-custom py-1 text-sm" href="#">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">settings</span>
-                    <span style="font-size: 13px;">Pengaturan</span>
-                </a>
-                <a class="nav-link-custom py-1 text-sm" href="#">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">help</span>
-                    <span style="font-size: 13px;">Bantuan</span>
-                </a>
-            </div>
         </div>
     </aside>
 
