@@ -15,16 +15,16 @@ if (isset($_GET['id'])) {
     $id = mysqli_real_escape_string($conn, $_GET['id']);
     
     // Query 1: Mengambil data satu anggota spesifik berdasarkan UserID untuk diedit
-    $query_edit = mysqli_query($conn, "SELECT * FROM job WHERE JobID = '$id'");
-    $data_job = mysqli_fetch_assoc($query_edit);
+    $query_edit = mysqli_query($conn, "SELECT * FROM postingan WHERE id_post = '$id'");
+    $data_post = mysqli_fetch_assoc($query_edit);
 
-    if (!$data_job) {
-        echo "<script>alert('Data job tidak ditemukan!'); window.location='job.php';</script>";
+    if (!$data_post) {
+        echo "<script>alert('Data postingan tidak ditemukan!'); window.location='postingan.php';</script>";
         exit;
     }
 } else {
     // Jika tidak ada ID di URL, kembalikan ke halaman daftar anggota
-    header("Location: job.php");
+    header("Location: postingan.php");
     exit;
 }
 
@@ -241,7 +241,7 @@ if (isset($_GET['id'])) {
                     <span class="material-symbols-outlined">group</span>
                     <span class="small fw-medium">Data Anggota</span>
                 </a>
-                <a class="nav-link-custom active" href="job.php">
+                <a class="nav-link-custom" href="job.php">
                     <span class="material-symbols-outlined">event</span>
                     <span class="small fw-medium">Jadwal/Job</span>
                 </a>
@@ -253,7 +253,7 @@ if (isset($_GET['id'])) {
                     <span class="material-symbols-outlined">money</span>
                     <span class="small fw-medium">Data Kas</span>
                 </a>
-                <a class="nav-link-custom" href="postingan.php">
+                <a class="nav-link-custom active" href="postingan.php">
                     <span class="material-symbols-outlined">event_available</span>
                     <span class="small fw-medium">Data Postingan</span>
                 </a>
@@ -288,11 +288,11 @@ if (isset($_GET['id'])) {
                     </li>
                     <li class="breadcrumb-item">
                         <a href="anggota.php" class="text-white text-decoration-none d-flex align-items-center gap-1 hover-purple">
-                            Jadwal/Job
+                            Data Postingan
                         </a>
                     </li>
                     <li class="breadcrumb-item active fw-semibold" aria-current="page" style="color: var(--accent-color);">
-                        Edit Job
+                        Edit Postingan
                     </li>
                 </ol>
             </nav>
@@ -319,42 +319,27 @@ if (isset($_GET['id'])) {
                                 <span class="material-symbols-outlined" style="color: var(--accent-color)">person_add_alt_1</span>
                             </div>
                             <div>
-                                <h2 class="h5 text-white mb-0 fw-bold">Edit Job</h2>
-                                <p class="text-white small mb-0">Perbarui Job</p>
+                                <h2 class="h5 text-white mb-0 fw-bold">Edit Postingan</h2>
+                                <p class="text-white small mb-0">Perbarui Postingan</p>
                             </div>
                         </div>
 
-                        <form action="proses_edit_job.php" method="POST">
-                            <input type="hidden" name="JobID" value="<?= $data_job['JobID']; ?>">
+                        <form action="proses_edit_postingan.php" method="POST">
+                            <input type="hidden" name="id_post" value="<?= $data_post['id_post']; ?>">
 
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label text-white-50 small fw-medium">Nama Tuan Rumah</label>
-                                    <input type="text" name="NamaTuanRumah" value="<?= $data_job['NamaTuanRumah']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Masukkan Nama tuan rumah" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                    <label class="form-label text-white-50 small fw-medium">Isi Postingan</label>
+                                    <input type="text" name="isi_postingan" value="<?= $data_post['isi_postingan']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Edit Isi Postingan" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="form-label text-white-50 small fw-medium">Tanggal</label>
-                                    <input type="date" name="Tanggal" value="<?= $data_job['Tanggal']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
-                                </div>
-
-                                <div class="col-12">
-                                    <label class="form-label text-white-50 small fw-medium">Alamat</label>
-                                    <input type="text" name="Alamat" value="<?= $data_job['Alamat']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Masukkan nama lengkap" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
-                                </div>
-
-                                <div class="col-12">
-                                    <label class="form-label text-white-50 small fw-medium">Nama Group</label>
-                                    <input type="text" name="NamaGroup" value="<?= $data_job['NamaGroup']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" placeholder="Contoh: Sukabumi" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
-                                </div>
-
-                                <div class="col-12">
-                                    <label class="form-label text-white-50 small fw-medium">Seragam</label>
-                                    <input type="text" name="Seragam" value="<?= $data_job['Seragam']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" required style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                                    <label class="form-label text-white-50 small fw-medium">File Media</label>
+                                    <input type="file" name="file_media" value="<?= $data_job['file_media']; ?>" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-3 p-2.5 small" style="transition: all 0.2s;" onfocus="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 0 0 0.25rem rgba(237,177,255,0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
                                 </div>
 
                                 <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-white border-opacity-10">
-                                    <a href="job.php" class="btn btn-sm d-inline-flex align-items-center gap-2 border border-white border-opacity-10 text-white p-2.5 px-4 rounded-3" style="background: rgba(255,255,255,0.02);">
+                                    <a href="postingan.php" class="btn btn-sm d-inline-flex align-items-center gap-2 border border-white border-opacity-10 text-white p-2.5 px-4 rounded-3" style="background: rgba(255,255,255,0.02);">
                                         Batal
                                     </a>
                                     <button type="submit" name="update" class="btn btn-sm d-inline-flex align-items-center gap-2 text-white p-2.5 px-4 rounded-3" style="background: var(--primary-gradient);">

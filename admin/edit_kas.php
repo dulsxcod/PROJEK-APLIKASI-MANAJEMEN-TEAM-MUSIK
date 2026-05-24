@@ -252,6 +252,10 @@ if (isset($_GET['id'])) {
                     <span class="material-symbols-outlined">money</span>
                     <span class="small fw-medium">Data Kas</span>
                 </a>
+                <a class="nav-link-custom" href="postingan.php">
+                    <span class="material-symbols-outlined">event_available</span>
+                    <span class="small fw-medium">Data Postingan</span>
+                </a>
             </nav>
         </div>
 

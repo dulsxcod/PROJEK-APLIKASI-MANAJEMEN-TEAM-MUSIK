@@ -29,7 +29,8 @@ $row = mysqli_fetch_assoc($query);
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
 
     <style>
         :root {
@@ -162,9 +163,19 @@ $row = mysqli_fetch_assoc($query);
         }
 
         @media (max-width: 991.98px) {
-            aside { display: none; }
-            header { width: 100%; }
-            main { margin-left: 0; padding-left: 15px; padding-right: 15px; }
+            aside {
+                display: none;
+            }
+
+            header {
+                width: 100%;
+            }
+
+            main {
+                margin-left: 0;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
         }
 
         .chat-area {
@@ -208,7 +219,7 @@ $row = mysqli_fetch_assoc($query);
 
         .breadcrumb-item+.breadcrumb-item::before {
             color: rgba(255, 255, 255, 0.3) !important;
-        } 
+        }
     </style>
 </head>
 
@@ -219,48 +230,37 @@ $row = mysqli_fetch_assoc($query);
             <div class="px-4 mb-4">
                 <h1 class="h3 fw-bold brand-title mb-0">KIMOCHI Team</h1>
                 <small class="text-white border opacity-50 text-uppercase tracking-widest"
-                    style="font-size: 10px;">Admin Studio Pro</small>
+                    style="font-size: 10px;">Anggota Form</small>
             </div>
 
             <a href="index.php" class="text-decoration-none">
                 <div class="px-3 mb-4">
-                    <div class="d-flex align-items-center gap-3 p-3 glass-panel" style="border-radius: 12px; transform: none;">
-                        <img alt="Avatar Admin" class="rounded-circle object-fit-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCckUUmf2pbR34bOL0Ux5qx8dLAbJRNb85WVUwjNuAqbtdliy2ZTmqHnjSWxaeNODa9ueOiXQLONOyE_rRaYGvWoNDHRCWG3ejw1H4xJR-u5SSGZRZ_MITX1_GEuklqIjII4VUXL8rtHwEm665H2dssSxO90a7LCLaxLCb3Wnsk_nYhm6p4o1nElSk6gXk7OgIBLlp1drhqMKPMniywgNh489CDbLNkz4yv1lRo5tG3iPtI6s0d5SgPkwPyGY5zmoUcV2NfkkAyLC0" style="width:40px; height:40px; border: 1px solid rgba(237,177,255,0.3);" />
+                    <div class="d-flex align-items-center gap-3 p-3 glass-panel"
+                        style="border-radius: 12px; transform: none;">
+                        <img alt="Avatar Admin" class="rounded-circle object-fit-cover"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCckUUmf2pbR34bOL0Ux5qx8dLAbJRNb85WVUwjNuAqbtdliy2ZTmqHnjSWxaeNODa9ueOiXQLONOyE_rRaYGvWoNDHRCWG3ejw1H4xJR-u5SSGZRZ_MITX1_GEuklqIjII4VUXL8rtHwEm665H2dssSxO90a7LCLaxLCb3Wnsk_nYhm6p4o1nElSk6gXk7OgIBLlp1drhqMKPMniywgNh489CDbLNkz4yv1lRo5tG3iPtI6s0d5SgPkwPyGY5zmoUcV2NfkkAyLC0"
+                            style="width:40px; height:40px; border: 1px solid rgba(237,177,255,0.3);" />
                         <div class="overflow-hidden">
                             <p class="mb-0 fw-semibold text-white text-truncate small">
-                                <?= isset($row['NamaLengkap']) ? htmlspecialchars($row['NamaLengkap']) : 'Admin'; ?></p>
-                            <span class="text-white text-uppercase tracking-wider" style="font-size: 9px;">Kepala Operasional</span>
+                                <?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : 'Anggota'; ?>
+                            </p>
+                            <span class="text-white text-uppercase tracking-wider" style="font-size: 9px;"><?= $row['Bagian'] ?></span>
+                            <span class="text-warning text-uppercase tracking-wider" style="font-size: 9px;"><?= $row['Role'] ?></span>
                         </div>
                     </div>
                 </div>
             </a>
 
-            <nav class="px-2 d-flex flex-column gap-1 custom-scrollbar overflow-y-auto" style="max-height: calc(100vh - 320px);">
+            <nav class="px-2 d-flex flex-column gap-1 custom-scrollbar overflow-y-auto"
+                style="max-height: calc(100vh - 320px);">
                 <a class="nav-link-custom" href="index.php">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                     <span class="small fw-medium">Dashboard</span>
-                </a>
-                <a class="nav-link-custom" href="anggota.php">
-                    <span class="material-symbols-outlined">group</span>
-                    <span class="small fw-medium">Data Anggota</span>
-                </a>
-                <a class="nav-link-custom" href="job.php">
-                    <span class="material-symbols-outlined">event</span>
-                    <span class="small fw-medium">Jadwal/Job</span>
                 </a>
                 <a class="nav-link-custom active" href="chat.php">
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
                 </a>
-                <a class="nav-link-custom" href="kas.php">
-                    <span class="material-symbols-outlined">money</span>
-                    <span class="small fw-medium">Data Kas</span>
-                </a>
-                <a class="nav-link-custom" href="postingan.php">
-                    <span class="material-symbols-outlined">event_available</span>
-                    <span class="small fw-medium">Data Postingan</span>
-                </a>
-            </nav>
         </div>
 
         <div class="px-3">
@@ -268,8 +268,10 @@ $row = mysqli_fetch_assoc($query);
                 Logout
             </a>
             <div class="pt-3 border-top border-white border-opacity-10 d-flex flex-column gap-1">
-                <a class="nav-link-custom py-1 text-sm" href="#"><span class="material-symbols-outlined" style="font-size: 18px;">settings</span><span style="font-size: 13px;">Pengaturan</span></a>
-                <a class="nav-link-custom py-1 text-sm" href="#"><span class="material-symbols-outlined" style="font-size: 18px;">help</span><span style="font-size: 13px;">Bantuan</span></a>
+                <a class="nav-link-custom py-1 text-sm" href="#"><span class="material-symbols-outlined"
+                        style="font-size: 18px;">settings</span><span style="font-size: 13px;">Pengaturan</span></a>
+                <a class="nav-link-custom py-1 text-sm" href="#"><span class="material-symbols-outlined"
+                        style="font-size: 18px;">help</span><span style="font-size: 13px;">Bantuan</span></a>
             </div>
         </div>
     </aside>
@@ -278,8 +280,12 @@ $row = mysqli_fetch_assoc($query);
         <div class="d-flex align-items-center gap-2">
             <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                 <ol class="breadcrumb m-0 align-items-center" style="font-size: 13px; letter-spacing: 0.05em;">
-                    <li class="breadcrumb-item"><a href="index.php" class="text-white text-decoration-none d-flex align-items-center gap-1 hover-purple"><span class="material-symbols-outlined" style="font-size: 16px;">dashboard</span> Dashboard</a></li>
-                    <li class="breadcrumb-item active fw-semibold" aria-current="page" style="color: var(--accent-color);">Chat Group</li>
+                    <li class="breadcrumb-item"><a href="index.php"
+                            class="text-white text-decoration-none d-flex align-items-center gap-1 hover-purple"><span
+                                class="material-symbols-outlined" style="font-size: 16px;">dashboard</span>
+                            Dashboard</a></li>
+                    <li class="breadcrumb-item active fw-semibold" aria-current="page"
+                        style="color: var(--accent-color);">Chat Group</li>
                 </ol>
             </nav>
         </div>
@@ -287,11 +293,14 @@ $row = mysqli_fetch_assoc($query);
 
     <main class="px-4 pb-5">
         <div class="container-fluid mt-3">
-            <div class="glass-panel d-flex flex-column" style="height: calc(100vh - 140px); overflow: hidden; border-radius: 16px;">
+            <div class="glass-panel d-flex flex-column"
+                style="height: calc(100vh - 140px); overflow: hidden; border-radius: 16px;">
 
-                <div class="p-3 border-bottom border-white border-opacity-10 d-flex align-items-center justify-content-between" style="background: rgba(0,0,0,0.2);">
+                <div class="p-3 border-bottom border-white border-opacity-10 d-flex align-items-center justify-content-between"
+                    style="background: rgba(0,0,0,0.2);">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="p-2.5 rounded-circle d-flex align-items-center justify-content-center" style="background: rgba(237,177,255,0.1); width: 45px; height: 45px;">
+                        <div class="p-2.5 rounded-circle d-flex align-items-center justify-content-center"
+                            style="background: rgba(237,177,255,0.1); width: 45px; height: 45px;">
                             <span class="material-symbols-outlined" style="color: var(--accent-color)">groups</span>
                         </div>
                         <div>
@@ -306,9 +315,15 @@ $row = mysqli_fetch_assoc($query);
                 </div>
 
                 <div class="p-3 border-top border-white border-opacity-10" style="background: rgba(0,0,0,0.2);">
-                    <form action="proses_kirim_chat.php" id="form-kirim-chat" class="d-flex gap-2 align-items-center" method="POST">
-                        <input type="text" name="pesan" class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-5 p-2.5 px-4 small flex-grow-1" placeholder="Ketik pesan koordinasi di sini..." required autocomplete="off" style="font-size: 14px;">
-                        <button type="submit" class="btn gradient-btn rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px; padding: 0;">
+                    <form action="proses_kirim_chat.php" id="form-kirim-chat" class="d-flex gap-2 align-items-center"
+                        method="POST">
+                        <input type="text" name="pesan"
+                            class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-black rounded-5 p-2.5 px-4 small flex-grow-1"
+                            placeholder="Ketik pesan koordinasi di sini..." required autocomplete="off"
+                            style="font-size: 14px;">
+                        <button type="submit"
+                            class="btn gradient-btn rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 44px; height: 44px; min-width: 44px; padding: 0;">
                             <span class="material-symbols-outlined" style="font-size: 20px;">send</span>
                         </button>
                     </form>
@@ -350,10 +365,10 @@ $row = mysqli_fetch_assoc($query);
         setInterval(loadChatRealtime, 1000);
 
         // 2. FUNGSI KIRIM CHAT TANPA REFRESH HALAMAN
-        document.getElementById('form-kirim-chat').addEventListener('submit', function(e) {
-            e.preventDefault(); 
+        document.getElementById('form-kirim-chat').addEventListener('submit', function (e) {
+            e.preventDefault();
             const inputPesan = this.querySelector('input[name="pesan"]');
-            if(inputPesan.value.trim() === "") return;
+            if (inputPesan.value.trim() === "") return;
 
             const formData = new FormData(this);
             formData.append('kirim_pesan', true);
@@ -362,16 +377,16 @@ $row = mysqli_fetch_assoc($query);
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(res => {
-                if(res.status === 'success') {
-                    inputPesan.value = ''; // Kosongkan form ketikan
-                    urutanTerbawah = true;
-                    loadChatRealtime();    // Langsung update chat detik itu juga
-                } else {
-                    alert('Gagal mengirim pesan: ' + res.message);
-                }
-            });
+                .then(response => response.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        inputPesan.value = ''; // Kosongkan form ketikan
+                        urutanTerbawah = true;
+                        loadChatRealtime();    // Langsung update chat detik itu juga
+                    } else {
+                        alert('Gagal mengirim pesan: ' + res.message);
+                    }
+                });
         });
 
         // Efek Sorotan Mouse Background
@@ -388,4 +403,5 @@ $row = mysqli_fetch_assoc($query);
         });
     </script>
 </body>
+
 </html>

@@ -9,26 +9,6 @@ $id_login = isset($_SESSION['UserID']) ? $_SESSION['UserID'] : 1;
 // Query ini akan otomatis mengambil data ALIF (UserID: 4) jika Alif yang login
 $query = mysqli_query($conn, "SELECT * FROM anggota WHERE UserID = $id_login");
 $row = mysqli_fetch_assoc($query);
-
-
-// Query 2: Menghitung total semua musisi di tabel anggota
-$query_total_anggota = mysqli_query($conn, "SELECT COUNT(*) AS total_anggota FROM anggota");
-$data_total_anggota = mysqli_fetch_assoc($query_total_anggota);
-$total_anggota = $data_total_anggota['total_anggota'];
-
-
-$query_total_job = mysqli_query($conn, "SELECT COUNT(*) AS total_job FROM job");
-$data_total_job = mysqli_fetch_assoc($query_total_job);
-$total_job = $data_total_job['total_job'];
-
-// Query untuk menghitung total saldo kas
-$query_saldo = mysqli_query($conn, "SELECT SUM(Pemasukan) - SUM(Pengeluaran) AS total_saldo FROM kas");
-$data_saldo = mysqli_fetch_assoc($query_saldo);
-$total_saldo = $data_saldo['total_saldo'] ?? 0; // Jika data kosong, default ke 0
-
-$query_total_post = mysqli_query($conn, "SELECT COUNT(*) AS total_post FROM postingan");
-$data_total_post = mysqli_fetch_assoc($query_total_post);
-$total_post = $data_total_post['total_post'];
 ?>
 
 <!DOCTYPE html>
@@ -269,7 +249,7 @@ $total_post = $data_total_post['total_post'];
             <div class="px-4 mb-4">
                 <h1 class="h3 fw-bold brand-title mb-0">KIMOCHI Team</h1>
                 <small class="text-white border opacity-50 text-uppercase tracking-widest"
-                    style="font-size: 10px;">Admin Studio Pro</small>
+                    style="font-size: 10px;">Anggota Form</small>
             </div>
 
             <a href="index.php" class="text-decoration-none">
@@ -281,10 +261,10 @@ $total_post = $data_total_post['total_post'];
                             style="width:40px; height:40px; border: 1px solid rgba(237,177,255,0.3);" />
                         <div class="overflow-hidden">
                             <p class="mb-0 fw-semibold text-white text-truncate small">
-                                <?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : 'Admin'; ?>
+                                <?= isset($row['NamaLengkap']) ? $row['NamaLengkap'] : 'Anggota'; ?>
                             </p>
-                            <span class="text-white text-uppercase tracking-wider" style="font-size: 9px;">Kepala
-                                Operasional</span>
+                            <span class="text-white text-uppercase tracking-wider" style="font-size: 9px;"><?= $row['Bagian'] ?></span>
+                            <span class="text-warning text-uppercase tracking-wider" style="font-size: 9px;"><?= $row['Role'] ?></span>
                         </div>
                     </div>
                 </div>
@@ -296,25 +276,9 @@ $total_post = $data_total_post['total_post'];
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                     <span class="small fw-medium">Dashboard</span>
                 </a>
-                <a class="nav-link-custom" href="anggota.php">
-                    <span class="material-symbols-outlined">group</span>
-                    <span class="small fw-medium">Data Anggota</span>
-                </a>
-                <a class="nav-link-custom" href="job.php">
-                    <span class="material-symbols-outlined">event</span>
-                    <span class="small fw-medium">Jadwal/Job</span>
-                </a>
                 <a class="nav-link-custom" href="chat.php">
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
-                </a>
-                <a class="nav-link-custom" href="kas.php">
-                    <span class="material-symbols-outlined">money</span>
-                    <span class="small fw-medium">Data Kas</span>
-                </a>
-                <a class="nav-link-custom" href="postingan.php">
-                    <span class="material-symbols-outlined">event_available</span>
-                    <span class="small fw-medium">Data Postingan</span>
                 </a>
             </nav>
         </div>
@@ -359,74 +323,9 @@ $total_post = $data_total_post['total_post'];
 
     <main class="px-4 pb-5">
 
-        <section class="row g-4 mt-1">
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(214,186,255,0.15); color: var(--secondary-color);">
-                            <span class="material-symbols-outlined">group</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Total
-                            Anggota</p>
-                        <h3 class="h2 fw-bold mb-0"><?= $total_anggota; ?> Anggota</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(214,186,255,0.15); color: var(--secondary-color);">
-                            <span class="material-symbols-outlined">event</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Total Job
-                        </p>
-                        <h3 class="h2 fw-bold mb-0"><?= $total_job; ?> Job</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(208,203,89,0.15); color: var(--tertiary-color);">
-                            <span class="material-symbols-outlined">event_available</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Total
-                            Postingan</p>
-                        <h3 class="h2 fw-bold mb-0"><?= $total_post; ?> Postingan</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3">
-                <div class="glass-panel p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="p-2.5 rounded-3"
-                            style="background: rgba(237,177,255,0.15); color: var(--accent-color);">
-                            <span class="material-symbols-outlined">payments</span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-white small mb-1 tracking-wide text-uppercase" style="font-size: 10px;">Estimasi
-                            Kas</p>
-                        <h3 class="h2 fw-bold mb-0" style="color: var(--accent-color);">
-                            <?= "Rp. " . number_format($total_saldo, 0, ',', '.'); ?> -,
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="row g-4 mt-2">
+        <section class="row g-4 mt-2 justify-content-center">
             
-            <div class="col-12 col-lg-7 col-xl-8">
+            <div class="col-12 col-lg-7 col-xl-8 mx-auto">
                 <h6 class="text-white fw-bold ms-1 mb-3">INFO PENTING</h6>
 
                 <div class="glass-panel overflow-hidden mb-4">
@@ -651,142 +550,8 @@ $total_post = $data_total_post['total_post'];
                         </div>
                     </div>
                 <?php } ?>
-            </div> <div class="col-12 col-lg-5 col-xl-4">
-                <div class="glass-panel p-4 position-sticky" style="top: 100px;">
-                    <h6 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
-                        <span class="material-symbols-outlined text-warning">bolt</span> Input Cepat
-                    </h6>
-
-                    <ul class="nav nav-pills nav-pills-custom mb-4 gap-2" id="quickAddTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="job-tab" data-bs-toggle="pill" data-bs-target="#job" type="button" role="tab">Job Baru</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="kas-tab" data-bs-toggle="pill" data-bs-target="#kas" type="button" role="tab">Kas</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="anggota-tab" data-bs-toggle="pill" data-bs-target="#anggota" type="button" role="tab">Anggota</button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content" id="quickAddTabContent">
-                        
-                        <div class="tab-pane fade show active" id="job" role="tabpanel">
-                            <form action="proses_tambah_job.php" method="POST">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Nama Tuan Rumah</label>
-                                        <input type="text" name="NamaTuanRumah" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Masukkan nama tuan rumah" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Tanggal</label>
-                                        <input type="date" name="Tanggal" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Alamat</label>
-                                        <input type="text" name="Alamat" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Masukkan alamat lengkap" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Nama Group</label>
-                                        <input type="text" name="NamaGroup" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: PUTRA NAFITA CAHYA" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Seragam</label>
-                                        <input type="text" name="Seragam" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: Batik" required>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-white border-opacity-10">
-                                        <button type="submit" class="btn btn-sm d-inline-flex align-items-center gap-2 text-white p-2.5 px-4 rounded-3 w-100 justify-content-center gradient-btn">
-                                            <span class="material-symbols-outlined text-sm">save</span> Simpan Job
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="tab-pane fade" id="kas" role="tabpanel">
-                            <form action="proses_tambah_kas.php" method="POST">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Tanggal</label>
-                                        <input type="date" name="Tanggal" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Pemasukan</label>
-                                        <input type="number" name="Pemasukan" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Masukan Nominal Uang Masuk" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Pengeluaran</label>
-                                        <input type="number" name="Pengeluaran" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Masukan Nominal Uang Keluar" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Keterangan</label>
-                                        <input type="text" name="Keterangan" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: Membeli Kabel Audio" required>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-white border-opacity-10">
-                                        <button type="submit" class="btn btn-sm d-inline-flex align-items-center gap-2 text-white p-2.5 px-4 rounded-3 w-100 justify-content-center gradient-btn">
-                                            <span class="material-symbols-outlined text-sm">save</span> Simpan Kas
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="tab-pane fade" id="anggota" role="tabpanel">
-                            <form action="proses_tambah_anggota.php" method="POST">
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label text-white-50 small fw-medium">Username</label>
-                                        <input type="text" name="Username" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label text-white-50 small fw-medium">Password</label>
-                                        <input type="password" name="Password" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Nama Lengkap</label>
-                                        <input type="text" name="NamaLengkap" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Tempat Lahir</label>
-                                        <input type="text" name="TempatLahir" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Tanggal Lahir</label>
-                                        <input type="date" name="TanggalLahir" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Jenis Kelamin</label>
-                                        <select class="form-select form-control-dark rounded-3" name="JenisKelamin">
-                                            <option value="Laki-laki">Laki-Laki</option>
-                                            <option value="Perempuan">Perempuan</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Nomor HP</label>
-                                        <input type="number" name="NoHP" class="form-control form-control-dark rounded-3 p-2.5 small" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Role</label>
-                                        <select class="form-select form-control-dark rounded-3" name="Role">
-                                            <option value="admin">Admin</option>
-                                            <option value="anggota">Anggota</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label text-white-50 small fw-medium">Bagian</label>
-                                        <input type="text" name="Bagian" class="form-control form-control-dark rounded-3 p-2.5 small" placeholder="Contoh: Keyboardist" required>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-white border-opacity-10">
-                                        <button type="submit" class="btn btn-sm d-inline-flex align-items-center gap-2 text-white p-2.5 px-4 rounded-3 w-100 justify-content-center gradient-btn">
-                                            <span class="material-symbols-outlined text-sm">save</span> Simpan Anggota
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> </section>
+            </div>
+        </section>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

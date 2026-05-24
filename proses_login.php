@@ -33,7 +33,7 @@ if ($cek > 0) {
         header("location:admin/index.php");
         exit();
     } else if ($data_user['Role'] == 'anggota') {
-        header("location:home_anggota.php");
+        header("location:anggota/index.php");
         exit();
     }
 } else {

@@ -338,7 +338,6 @@ $row = mysqli_fetch_assoc($query);
                 <small class="text-white border opacity-50 text-uppercase tracking-widest"
                     style="font-size: 10px;">Admin Studio Pro</small>
             </div>
-
             <a href="index.php" class="text-decoration-none">
                 <div class="px-3 mb-4">
                     <div class="d-flex align-items-center gap-3 p-3 glass-panel"
@@ -375,11 +374,11 @@ $row = mysqli_fetch_assoc($query);
                     <span class="material-symbols-outlined">forum</span>
                     <span class="small fw-medium">Chat Group</span>
                 </a>
-                <a class="nav-link-custom active" href="kas.php">
+                <a class="nav-link-custom" href="kas.php">
                     <span class="material-symbols-outlined">money</span>
                     <span class="small fw-medium">Data Kas</span>
                 </a>
-                <a class="nav-link-custom" href="postingan.php">
+                <a class="nav-link-custom active" href="postingan.php">
                     <span class="material-symbols-outlined">event_available</span>
                     <span class="small fw-medium">Data Postingan</span>
                 </a>
@@ -415,7 +414,7 @@ $row = mysqli_fetch_assoc($query);
                     </li>
                     <li class="breadcrumb-item active fw-semibold" aria-current="page"
                         style="color: var(--accent-color);">
-                        Data Kas
+                        Data Postingan
                     </li>
                 </ol>
             </nav>
@@ -428,7 +427,6 @@ $row = mysqli_fetch_assoc($query);
                 <input class="form-control search-box w-100 py-1.5" placeholder="Cari musisi, lagu..." type="text"
                     style="font-size: 13px;" />
             </div>
-        </div>
     </header>
 
     <main class="px-4 pb-5">
@@ -437,9 +435,8 @@ $row = mysqli_fetch_assoc($query);
             <div class="glass-panel overflow-hidden">
                 <div
                     class="px-4 py-3 d-flex justify-content-between align-items-center border-bottom border-white border-opacity-10">
-                    <h3 class="h5 fw-bold mb-0">Data Kas</h3>
-
-                    <a href="tambah_kas.php"
+                    <h3 class="h5 fw-bold mb-0">Data Postingan</h3>
+                    <a href="index.php"
                         class="px-3 mb-4 d-flex align-items-center p-3 glass-panel btn border border-white border-opacity-10 w-20 p-3 text-start d-flex align-items-center gap-3 bg-white-hover rounded-4 transition-all"
                         style="background: rgba(255,255,255,0.03);">
                         <div class="p-2.5 rounded-3"
@@ -447,8 +444,8 @@ $row = mysqli_fetch_assoc($query);
                             <span class="material-symbols-outlined">person_add</span>
                         </div>
                         <div>
-                            <p class="mb-0 fw-semibold text-white small">Tambah Kas</p>
-                            <span class="text-white text-xs" style="font-size:12px;">Uang Kas Team</span>
+                            <p class="mb-0 fw-semibold text-white small">Tambah Postingan</p>
+                            <span class="text-white text-xs" style="font-size:12px;">Posting sesuatu?</span>
                         </div>
                     </a>
                 </div>
@@ -457,52 +454,38 @@ $row = mysqli_fetch_assoc($query);
                         <thead>
                             <tr>
                                 <th class="px-4 py-3" style="width: 80px;">No</th>
-                                <th class="px-4 py-3">Tanggal</th>
-                                <th class="px-4 py-3">Pemasukan</th>
-                                <th class="px-4 py-3">Pengeluaran</th>
-                                <th class="px-4 py-3">Keterangan</th>
-                                <th class="px-4 py-3">Total</th>
+                                <th class="px-4 py-3">ID User</th>
+                                <th class="px-4 py-3">Isi Postingan</th>
+                                <th class="px-4 py-3">File Media</th>
+                                <th class="px-4 py-3">Tanggal Post</th>
                                 <th class="px-4 py-3 text-end" style="width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             // 1. Jalankan query untuk mengambil semua data dari tabel anggota
-                            $query_kas = mysqli_query($conn, "SELECT * FROM kas");
+                            $query_post = mysqli_query($conn, "SELECT * FROM postingan");
 
                             // 2. Cek apakah ada data di dalam tabel
-                            if (mysqli_num_rows($query_kas) > 0) {
+                            if (mysqli_num_rows($query_post) > 0) {
                                 $no = 1;
-
-                                // --- TAMBAHKAN BARIS INI (INILIALISASI) ---
-                                $saldo_berjalan = 0;
-                                // ------------------------------------------
-                            
                                 // 3. Lakukan perulangan untuk menampilkan setiap baris data
-                                while ($row_kas = mysqli_fetch_assoc($query_kas)) {
-                                    // Sekarang variabel $saldo_berjalan sudah dikenal
-                                    $saldo_berjalan = $saldo_berjalan + $row_kas['Pemasukan'] - $row_kas['Pengeluaran'];
+                                while ($row_post = mysqli_fetch_assoc($query_post)) {
                                     ?>
                                     <tr>
                                         <td class="px-4 py-3 small text-white"><?= $no++; ?></td>
                                         <td class="px-4 py-3">
-                                            <span class="small text-white fw-medium"><?= $row_kas['Tanggal']; ?></span>
-                                        </td>
-                                        <td class="text-success">
-                                            <?= "Rp " . number_format($row_kas['Pemasukan'], 0, ',', '.'); ?>
-                                        </td>
-                                        <td class="text-danger">
-                                            <?= "Rp " . number_format($row_kas['Pengeluaran'], 0, ',', '.'); ?>
+                                            <span class="small text-white fw-medium"><?= $row_post['user_id']; ?></span>
                                         </td>
                                         <td class="px-4 py-3"><span
-                                                class="small text-white"><?= $row_kas['Keterangan']; ?></span>
-                                        </td>
-                                        <td class="fw-bold" style="color: var(--accent-color);">
-                                            <?= "Rp " . number_format($saldo_berjalan, 0, ',', '.'); ?>
-                                        </td>
+                                                class="small text-white"><?= $row_post['isi_postingan']; ?></span></td>
+                                        <td class="px-4 py-3"><span
+                                                class="small text-white"><?= $row_post['file_media']; ?></span></td>
+                                        <td class="px-4 py-3"><span
+                                                class="small text-white"><?= $row_post['tanggal_post']; ?></span></td>
                                         <td class="px-4 py-3">
                                             <div class="d-flex align-items-center gap-2">
-                                                <a href="edit_kas.php?id=<?= $row_kas['KasID']; ?>"
+                                                <a href="edit_postingan.php?id=<?= $row_post['id_post']; ?>"
                                                     class="btn btn-sm d-inline-flex align-items-center justify-content-center border border-white border-opacity-10 rounded-3 p-2"
                                                     title="Edit Data"
                                                     style="background: rgba(255, 255, 255, 0.02); transition: all 0.2s;">
@@ -510,7 +493,7 @@ $row = mysqli_fetch_assoc($query);
                                                         style="font-size: 18px; color: var(--accent-color);">edit</span>
                                                 </a>
 
-                                                <a href="proses_hapus_kas.php?id=<?= $row_kas['KasID']; ?>"
+                                                <a href="proses_hapus_postingan.php?id=<?= $row_post['id_post']; ?>"
                                                     class="btn btn-sm d-inline-flex align-items-center justify-content-center border border-white border-opacity-10 rounded-3 p-2"
                                                     title="Hapus Data"
                                                     onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?');"
